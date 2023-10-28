@@ -20,11 +20,14 @@ app = dash.Dash(__name__)
 )
 def get_pie_chart(entered_site):
     if entered_site == 'ALL':
-        fig = px.pie(spacex_df, values='class', names='class', title='Total Success Launches By Site')
+        grouped_df = spacex_df.groupby('class').size().reset_index(name='counts')
+        fig = px.pie(grouped_df, values='counts', names='class', title='Total Success Launches By Site')
     else:
         filtered_df = spacex_df[spacex_df['Launch Site'] == entered_site]
-        fig = px.pie(filtered_df, values='class', names='class', title=f'Success Launches For {entered_site}')
+        grouped_df = filtered_df.groupby('class').size().reset_index(name='counts')
+        fig = px.pie(grouped_df, values='counts', names='class', title=f'Success Launches For {entered_site}')
     return fig
+
 
 # TASK 4: Add a callback function for `site-dropdown` and `payload-slider` as inputs, `success-payload-scatter-chart` as output
 @app.callback(
